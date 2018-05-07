@@ -1,0 +1,9 @@
+---
+
+- name: Install Varnish 5.x package
+  apt:
+    name: varnish
+    state: latest
+    update_cache: yes
+  notify:
+    - start varnish

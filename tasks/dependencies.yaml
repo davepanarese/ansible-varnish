@@ -1,0 +1,12 @@
+---
+
+- name: Install dependencies packages
+  apt:
+    name: "{{ item }}"
+    state: latest
+    update_cache: yes
+  with_items:
+    - curl
+    - gnupg
+    - apt-transport-https
+    - software-properties-common

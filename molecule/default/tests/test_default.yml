@@ -1,0 +1,11 @@
+---
+package:
+  varnish:
+    installed: true
+port:
+  tcp:8080:
+    listening: true
+service:
+  varnish:
+    enabled: true
+    running: true

@@ -1,0 +1,14 @@
+---
+
+- name: reload systemd-unit
+  shell: systemctl daemon-reload
+
+- name: restart varnish
+  service:
+    name: varnish
+    state: restarted
+
+- name: start varnish
+  service:
+    name: varnish
+    state: started
