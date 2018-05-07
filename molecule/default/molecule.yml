@@ -4,6 +4,7 @@ dependency:
 driver:
   name: docker
 lint:
+  enabled: False
   name: yamllint
 platforms:
   - name: instance-1
@@ -18,5 +19,14 @@ provisioner:
     destroy: destroy.yml
 scenario:
   name: default
+  test_sequence:
+    - destroy
+    - dependency
+    - syntax
+    - create
+    - prepare
+    - converge
+    - verify
+    - destroy
 verifier:
   name: goss
