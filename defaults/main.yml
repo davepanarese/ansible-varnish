@@ -21,12 +21,13 @@ varnish_application:
       section1:
         path: "/section1"
         http_header: "section1"
-        cache_ttl: "60s"
-      home:
+        cache_ttl: "60"
+        cache_control: "60"
+      homepage:
         url: "www.example.com"
         path: "/$"
         http_header: "homepage"
-        cache_ttl: "60s"
+        cache_ttl: "60"
     varnish_url_not_cache:
       login1:
         path: "/login"
