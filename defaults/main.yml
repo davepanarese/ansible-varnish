@@ -37,38 +37,3 @@ varnish_application:
         url: "admin.example.com"
         path: "/admin"
         http_header: "no cache - admin"
-  - name: application2
-    varnish_adm_port: 6081
-    varnish_port: "8081"
-    varnish_memory: "128m" 
-    varnish_probe_check:
-      probe_name: "probe"
-      probe_url: "/check.html"
-      probe_interval: "5s"
-      probe_timeout: "3s"
-      probe_window: "5"
-      probe_threshold: "3"
-    varnish_backend:
-      ansible_group: "all"
-      service_proxy_port: "80"
-    varnish_hosts_allow_purge:
-      - "127.0.0.1"
-    varnish_url_cache:
-      - name: section1
-        path: "/section1"
-        http_header: "section1"
-        cache_ttl: "60"
-        cache_control: "60"
-      - name: homepage
-        url: "www.example.com"
-        path: "/$"
-        http_header: "homepage"
-        cache_ttl: "60"
-    varnish_url_not_cache:
-      - name: login1
-        path: "/login"
-        http_header: "no cache - login"
-      - name: admin1
-        url: "admin.example.com"
-        path: "/admin"
-        http_header: "no cache - admin"

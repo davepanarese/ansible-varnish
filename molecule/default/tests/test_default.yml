@@ -6,6 +6,6 @@ port:
   tcp:8080:
     listening: true
 service:
-  varnish:
+  varnish@application1:
     enabled: true
     running: true
