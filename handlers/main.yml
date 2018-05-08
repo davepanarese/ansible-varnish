@@ -18,6 +18,14 @@
   with_items:
     - "{{ varnish_application }}"
 
+- name: restart varnishlog
+  systemd:
+    name: varnishlog@{{ item.name }}
+    state: restarted
+    enabled: true
+  with_items:
+    - "{{ varnish_application }}"
+
 - name: start varnish
   systemd:
     name: varnish@{{ item.name }}

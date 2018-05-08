@@ -22,6 +22,7 @@
     dest: /etc/systemd/system/varnishlog@.service
   notify:
     - reload systemd-unit
+    - restart varnishlog
 
 - name: Get Varnish configuration
   template:
