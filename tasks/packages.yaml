@@ -7,3 +7,10 @@
     update_cache: yes
   notify:
     - start varnish
+
+- name: Delete default varnish systemd unit
+  file:
+    path: /lib/systemd/system/varnish.service
+    state: absent
+  notify:
+    - reload systemd-unit
