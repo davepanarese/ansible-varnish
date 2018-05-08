@@ -3,7 +3,7 @@ package:
   varnish:
     installed: true
 port:
-  tcp:8080:
+  tcp:6082:
     listening: true
 service:
   varnish:
