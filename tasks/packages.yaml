@@ -13,11 +13,18 @@
     path: /lib/systemd/system/varnish.service
     state: absent
   notify:
-    - disable varnish
     - reload systemd-unit
 
-- name: Disable varnishncsa
-  systemd:
-    name: varnishncsa
-    state: stopped
-    enabled: false
+- name: Delete default varnish systemd unit
+  file:
+    path: /lib/systemd/system/varnishlog.service
+    state: absent
+  notify:
+    - reload systemd-unit
+
+- name: Delete default varnish systemd unit
+  file:
+    path: /lib/systemd/system/varnishncsa.service
+    state: absent
+  notify:
+    - reload systemd-unit
