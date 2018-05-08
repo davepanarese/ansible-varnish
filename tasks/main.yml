@@ -3,4 +3,4 @@
 - include: dependencies.yaml
 - include: repository.yaml
 - include: packages.yaml
-# - include: configure.yaml
+- include: configure.yaml

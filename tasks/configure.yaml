@@ -1,0 +1,10 @@
+---
+
+- name: Get Varnish configuration
+  template:
+    src: template.varnish.vcl.j2
+    dest: "/etc/varnish/{{ item }}.vcl"
+  with_items: "{{ varnish_application }}"
+
+# - name: Create Varnish Systemd unit
+#   with_items: "{{ varnish_application }}"
