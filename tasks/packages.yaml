@@ -13,4 +13,5 @@
     path: /lib/systemd/system/varnish.service
     state: absent
   notify:
+    - disable varnish
     - reload systemd-unit
