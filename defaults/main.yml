@@ -3,7 +3,7 @@
 
 varnish_application:
   - name: application1
-    varnish_adm_port: "6080"
+    varnish_adm_port: 6080
     varnish_port: "8080"
     varnish_memory: "1g" 
     varnish_probe_check:
