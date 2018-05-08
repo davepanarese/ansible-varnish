@@ -10,8 +10,6 @@ Description=Varnish HTTP accelerator log daemon Multi Instance
 
 ConditionPathExists=/etc/default/varnish-%I
 
-After=varnish@%I.service
-
 [Service]
 User=varnishlog
 Restart=always
