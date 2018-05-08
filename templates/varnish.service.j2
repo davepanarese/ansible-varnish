@@ -24,7 +24,7 @@ LimitCORE=infinity
 # configured backends healthy, to avoid routing traffic to a non-healthy backend.
 #WARMUP_TIME=0
 
-ExecStart=/usr/sbin/varnishd -a :{{ item.varnish_port }} -T localhost:6082 -f /etc/varnish/{{ item.name }}.vcl -S /etc/varnish/secret -s malloc,{{ item.varnish_memory }}
+ExecStart=/usr/sbin/varnishd -a :{{ item.varnish_port }} -T localhost:{{ item.varnish_adm_port }} -f /etc/varnish/{{ item.name }}.vcl -S /etc/varnish/secret -s malloc,{{ item.varnish_memory }}
 ExecReload=/usr/share/varnish/reload-vcl
 
 [Install]
