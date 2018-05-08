@@ -15,3 +15,9 @@
   notify:
     - disable varnish
     - reload systemd-unit
+
+- name: Disable varnishncsa
+  systemd:
+    name: varnishncsa
+    state: stopped
+    enabled: false

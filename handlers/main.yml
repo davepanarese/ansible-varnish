@@ -12,7 +12,7 @@
 
 - name: restart varnish
   systemd:
-    name: varnish-{{ item.name }}.service
+    name: varnish@{{ item.name }}
     state: restarted
     enabled: true
   with_items:
@@ -20,7 +20,7 @@
 
 - name: start varnish
   systemd:
-    name: varnish-{{ item.name }}.service
+    name: varnish@{{ item.name }}
     state: started
     enabled: true
   with_items:

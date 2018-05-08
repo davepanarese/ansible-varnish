@@ -1,14 +1,27 @@
 ---
 
-- name: Create Varnish Systemd unit
+- name: Create Varnish environment file
   template:
-    src: varnish.service.j2
-    dest: /etc/systemd/system/varnish-{{ item.name }}.service
+    src: default.varnish.j2
+    dest: "/etc/default/varnish-{{ item.name }}"
   with_items: 
     - "{{ varnish_application }}"
   notify:
-    - reload systemd-unit
     - restart varnish
+
+- name: Create Varnishd Systemd unit
+  template:
+    src: varnish.service.j2
+    dest: /etc/systemd/system/varnish@.service
+  notify:
+    - reload systemd-unit
+
+- name: Create Varnishlog Systemd unit
+  template:
+    src: varnishlog.service.j2
+    dest: /etc/systemd/system/varnishlog@.service
+  notify:
+    - reload systemd-unit
 
 - name: Get Varnish configuration
   template:

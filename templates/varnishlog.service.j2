@@ -1,0 +1,23 @@
+# Multi instance version of Varnishlog by Jules [https://ispire.me]
+#
+# create config file: /etc/default/varnish-{instancename}
+# create vcl file: /etc/varnish/{instancename}.vcl
+#
+# run: systemctl start varnishlog@{instancename}
+
+[Unit]
+Description=Varnish HTTP accelerator log daemon Multi Instance
+
+ConditionPathExists=/etc/default/varnish-%I
+
+After=varnish@%I.service
+
+[Service]
+User=varnishlog
+Restart=always
+RestartSec=5
+ExecStart=/usr/bin/varnishlog -a -n %I -t off -w /var/log/varnish/%I.log
+ExecReload=/bin/kill -HUP $MAINPID
+
+[Install]
+WantedBy=multi-user.target
