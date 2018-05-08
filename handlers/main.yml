@@ -10,7 +10,7 @@
     state: restarted
     enabled: True
   with_items:
-    - {{ varnish_application }}
+    - "{{ varnish_application }}"
 
 - name: start varnish
   systemd:
@@ -18,4 +18,4 @@
     state: started
     enabled: True
   with_items:
-    - {{ varnish_application }}
+    - "{{ varnish_application }}"
