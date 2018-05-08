@@ -8,7 +8,7 @@
 - name: Setup varnish repository
   apt_repository:
     repo: "{{ item.repo }}"
-    file: "{{ item.file }}"
+    filename: "{{ item.file }}"
     state: present
   with_items:
     - repo: deb https://packagecloud.io/varnishcache/varnish5/ubuntu/ {{ ansible_distribution_release }} main
