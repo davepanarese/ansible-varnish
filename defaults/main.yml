@@ -2,8 +2,9 @@
 # defaults vars
 
 varnish_application:
-  application1:
+  - name: application1
     varnish_port: "8080"
+    varnish_memory: "1g" 
     varnish_probe_check:
       probe_name: "probe"
       probe_url: "/check.html"
@@ -12,27 +13,26 @@ varnish_application:
       probe_window: "5"
       probe_threshold: "3"
     varnish_backend:
-      pool_name: "application1"
       ansible_group: "all"
       service_proxy_port: "80"
     varnish_hosts_allow_purge:
       - "127.0.0.1"
     varnish_url_cache:
-      section1:
+      - name: section1
         path: "/section1"
         http_header: "section1"
         cache_ttl: "60"
         cache_control: "60"
-      homepage:
+      - name: homepage
         url: "www.example.com"
         path: "/$"
         http_header: "homepage"
         cache_ttl: "60"
     varnish_url_not_cache:
-      login1:
+      - name: login1
         path: "/login"
         http_header: "no cache - login"
-      admin1:
+      - name: admin1
         url: "admin.example.com"
         path: "/admin"
         http_header: "no cache - admin"

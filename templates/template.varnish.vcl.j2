@@ -1,5 +1,5 @@
 #
-# This is VCL file for {{ item }}.
+# This is VCL file for {{ item.name }}.
 #
 
 vcl 4.0;
@@ -12,7 +12,7 @@ probe {{ item.varnish_probe_check.probe_name }}
     .url = "{{ item.varnish_probe_check.probe_url }}";
     .interval = {{ item.varnish_probe_check.probe_interval }};
     .timeout = {{ item.varnish_probe_check.probe_timeout }};
-    .window = {{ item.varnish_probe_check.probe_windows }};
+    .window = {{ item.varnish_probe_check.probe_window }};
     .threshold = {{ item.varnish_probe_check.probe_threshold }};
 }
 
@@ -43,9 +43,8 @@ sub identify_device {
 
 # Default backend definition. Set this to point to your content server.
 {% set count = 1 %}
-{% for backend in groups['{{ item.varnish_backend.ansible_group }}'] %}
-
-backend {{ item.varnish_backend.pool_name }}_{{ count }} {
+{% for backend in groups[item.varnish_backend.ansible_group] %}
+backend {{ item.name }}_{{ count }} {
     .host = "{{ backend }}";
     .port = "{{ item.varnish_backend.service_proxy_port }}";
     .probe = {{ item.varnish_probe_check.probe_name }};
@@ -54,23 +53,23 @@ backend {{ item.varnish_backend.pool_name }}_{{ count }} {
 {% endfor %}
 
 sub vcl_init {
-    new {{ item.varnish_backend.pool_name }} = directors.round_robin();
+    new {{ item.name }} = directors.round_robin();
 {% set count = 1 %}
-{% for backend in groups['{{ item.varnish_backend.ansible_group }}'] %}
-	{{ item.varnish_backend.pool_name }}.add_backend({{ item.varnish_backend.pool_name }}_{{ count }});
+{% for backend in groups[item.varnish_backend.ansible_group] %}
+	{{ item.name }}.add_backend({{ item.name }}_{{ count }});
 {% set count = count + 1 %}
 {% endfor %}
 }
 
 acl purge {
-{% for acl in {{ item.varnish_hosts_allow_purge }} %}
+{% for acl in item.varnish_hosts_allow_purge %}
     "{{ acl }}";
 {% endfor %}
 }
 
 sub vcl_recv {
     # Get backend nodes
-    set req.backend_hint = {{ item.varnish_backend.pool_name }}.backend();
+    set req.backend_hint = {{ item.name }}.backend();
 
     # Call device detection
     call identify_device;
@@ -81,7 +80,7 @@ sub vcl_recv {
     # Purge if allowed
     if (req.method == "PURGE") {
         if (!std.ip(regsub(req.http.X-Forwarded-For, "^([^,]+),?.*$", "\1"), "0.0.0.0") ~ purge) {
-                return(synth(403, "Not allowed."));
+            return(synth(403, "Not allowed."));
         }
         return (purge);
     }
@@ -92,8 +91,8 @@ sub vcl_recv {
     }
 
     # Don't cache path specified behind
-{% for object in {{ item.varnish_url_not_cache }} %}
-{% if {{ object.url }} is defined %}
+{% for object in item.varnish_url_not_cache %}
+{% if object.url is defined %}
     if (req.http.host ~ "^{{ object.url }}" && req.url ~ "^{{ object.path }}") {
         return (pass);
     }  
@@ -130,10 +129,10 @@ sub vcl_backend_response {
         return (deliver);
     }
 
-{% for object in {{ item.varnish_url_not_cache }} %}
-{% if {{ object.url }} is defined %}
+{% for object in item.varnish_url_not_cache %}
+{% if object.url is defined %}
     if (bereq.http.host ~ "^{{ object.url }}" && bereq.url ~ "^{{ object.path }}") {
-{% if {{ object.http_header }} is defined %}
+{% if object.http_header is defined %}
         set beresp.http.X-Cache-Rule = "{{ object.http_header }}";
 {% endif %}
         set beresp.uncacheable = true;
@@ -142,7 +141,7 @@ sub vcl_backend_response {
     }  
 {% else %}
     if (bereq.url ~ "^{{ object.path }}") {
-{% if {{ object.http_header }} is defined %}
+{% if object.http_header is defined %}
         set beresp.http.X-Cache-Rule = "{{ object.http_header }}";
 {% endif %}
         set beresp.uncacheable = true;
@@ -152,33 +151,33 @@ sub vcl_backend_response {
 {% endif %}
 {% endfor %}
 
-{% for object in {{ item.varnish_url_cache }} %}
-{% if {{ object.url }} is defined %}
+{% for object in item.varnish_url_cache %}
+{% if object.url is defined %}
     if (bereq.http.host ~ "^{{ object.url }}" && bereq.url ~ "^{{ object.path }}") {
         unset beresp.http.Expires;
-{% if {{ object.http_header }} is defined %}
+{% if object.http_header is defined %}
         set beresp.http.X-Cache-Rule = "{{ object.http_header }}";
 {% endif %}
         set beresp.ttl = {{ object.cache_ttl }}s;
-	    set beresp.http.X-Backend = beresp.backend.name;
-{% if {{ object.cache_control }} is defined %}        
-	    set beresp.http.Cache-Control = "public, max-age={{ object.cache_control }}";
+        set beresp.http.X-Backend = beresp.backend.name;
+{% if object.cache_control is defined %}
+        set beresp.http.Cache-Control = "public, max-age={{ object.cache_control }}";
 {% else %}
         set beresp.http.Cache-Control = "no-cache";
 {% endif %}
-	    set beresp.http.age = "0";
-	    unset beresp.http.set-cookie;
-	    return (deliver);
+        set beresp.http.age = "0";
+        unset beresp.http.set-cookie;
+        return (deliver);
     }  
 {% else %}
     if (bereq.url ~ "^{{ object.path }}") {
         unset beresp.http.Expires;
-{% if {{ object.http_header }} is defined %}
+{% if object.http_header is defined %}
         set beresp.http.X-Cache-Rule = "{{ object.http_header }}";
 {% endif %}
         set beresp.ttl = {{ object.cache_ttl }}s;
-	    set beresp.http.X-Backend = beresp.backend.name;
-{% if {{ object.cache_control }} is defined %}        
+        set beresp.http.X-Backend = beresp.backend.name;
+{% if object.cache_control is defined %}
 	    set beresp.http.Cache-Control = "public, max-age={{ object.cache_control }}";
 {% else %}
         set beresp.http.Cache-Control = "no-cache";

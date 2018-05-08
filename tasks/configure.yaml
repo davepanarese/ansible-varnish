@@ -1,10 +1,20 @@
 ---
 
+- name: Create Varnish Systemd unit
+  template:
+    src: varnish.service.j2
+    dest: /etc/systemd/system/varnish-{{ item.name }}.service
+  with_items: 
+    - "{{ varnish_application }}"
+  notify:
+    - reload systemd-unit
+    - restart varnish
+
 - name: Get Varnish configuration
   template:
     src: template.varnish.vcl.j2
-    dest: "/etc/varnish/{{ item }}.vcl"
-  with_items: "{{ varnish_application }}"
-
-# - name: Create Varnish Systemd unit
-#   with_items: "{{ varnish_application }}"
+    dest: "/etc/varnish/{{ item.name }}.vcl"
+  with_items: 
+    - "{{ varnish_application }}"
+  notify: 
+    - restart varnish

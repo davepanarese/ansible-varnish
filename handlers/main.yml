@@ -1,14 +1,21 @@
 ---
 
 - name: reload systemd-unit
-  shell: systemctl daemon-reload
+  systemd:
+    daemon_reload: yes
 
 - name: restart varnish
-  service:
-    name: varnish
+  systemd:
+    name: varnish-{{ item.name }}.service
     state: restarted
+    enabled: True
+  with_items:
+    - {{ varnish_application }}
 
 - name: start varnish
-  service:
-    name: varnish
+  systemd:
+    name: varnish-{{ item.name }}.service
     state: started
+    enabled: True
+  with_items:
+    - {{ varnish_application }}
