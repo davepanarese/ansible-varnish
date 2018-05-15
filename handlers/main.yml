@@ -4,23 +4,44 @@
   systemd:
     daemon_reload: yes
 
+- name: delete varnish unit
+  file:
+    path: /lib/systemd/system/varnish.service
+    state: absent
+
+- name: delete varnishlog unit
+  file:
+    path: /lib/systemd/system/varnishlog.service
+    state: absent
+
+- name: delete varnishncsa unit
+  file:
+    path: /lib/systemd/system/varnishncsa.service
+    state: absent
+
 - name: disable default varnish
   systemd:
     name: varnish
     state: stopped
     enabled: false
+  notify:
+    -  delete varnish unit
 
 - name: disable default varnishlog
   systemd:
     name: varnishlog
     state: stopped
     enabled: false
+  notify:
+    -  delete varnishlog unit
 
 - name: disable default varnishncsa
   systemd:
     name: varnishncsa
     state: stopped
     enabled: false
+  notify:
+    -  delete varnishncsa unit
 
 - name: restart varnish
   systemd:
