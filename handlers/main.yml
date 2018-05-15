@@ -9,12 +9,12 @@
     path: /lib/systemd/system/varnish.service
     state: absent
 
-- name: delete varnishlog unit
+- name: disable default varnishlog
   file:
     path: /lib/systemd/system/varnishlog.service
     state: absent
 
-- name: delete varnishncsa unit
+- name: disable default varnishncsa
   file:
     path: /lib/systemd/system/varnishncsa.service
     state: absent
@@ -26,14 +26,6 @@
     enabled: false
   notify:
     -  delete varnish unit
-
-- name: disable default varnishlog
-  notify:
-    -  delete varnishlog unit
-
-- name: disable default varnishncsa
-  notify:
-    -  delete varnishncsa unit
 
 - name: restart varnish
   systemd:
