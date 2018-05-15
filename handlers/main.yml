@@ -33,3 +33,9 @@
     enabled: true
   with_items:
     - "{{ varnish_application }}"
+    
+- name: unzip consul-template
+  unarchive:
+    src: /tmp/consul-template.zip
+    dest: /usr/local/bin/consul-template
+  
