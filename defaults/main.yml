@@ -1,6 +1,8 @@
 ---
 # defaults vars
 
+use_consul: false
+
 varnish_application:
   - name: application1
     varnish_adm_port: 6082
