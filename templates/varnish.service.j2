@@ -1,10 +1,3 @@
-# Multi instance version of Varnish
-#
-# create config file: /etc/default/varnish-{instancename}
-# create vcl file: /etc/varnish/{instancename}.vcl
-#
-# run: systemctl start varnish@{instancename}
-
 [Unit]
 Description=Varnish HTTP accelerator Multi Instance
 
@@ -19,7 +12,7 @@ Restart=always
 RestartSec=5
 ExecStartPre=/usr/sbin/varnishd -C -f /etc/varnish/%I.vcl
 ExecStart=/usr/sbin/varnishd -n %I $DAEMON_OPTS
-ExecReload=/usr/share/varnish/reload-vcl
+ExecReload=/bin/sh /usr/share/varnish/reload-vcl-%I
 
 [Install]
 WantedBy=multi-user.target

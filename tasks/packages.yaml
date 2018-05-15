@@ -1,40 +1,26 @@
 ---
 
-- name: Install Varnish 5.x package
+- name: Install varnish 5.x package
   apt:
     name: varnish
     state: latest
     update_cache: yes
   notify:
-    - disable default varnish
-    - disable default varnishlog
-    - disable default varnishncsa
-
-- name: Delete default varnish systemd unit
-  file:
-    path: /lib/systemd/system/varnish.service
-    state: absent
-  notify:
+    - delete default varnish
+    - delete default varnishlog
+    - delete default varnishncsa
     - reload systemd-unit
 
-- name: Delete default varnish systemd unit
-  file:
-    path: /lib/systemd/system/varnishlog.service
-    state: absent
-  notify:
-    - reload systemd-unit
+- name: Verify consul-template
+  stat:
+    path: /usr/local/bin/consul-template
+  register: consul_template_bin
+  when: (use_consul)
 
-- name: Delete default varnish systemd unit
-  file:
-    path: /lib/systemd/system/varnishncsa.service
-    state: absent
-  notify:
-    - reload systemd-unit
-
-- name: Install consul template
+- name: Install consul-template
   get_url:
     url: https://releases.hashicorp.com/consul-template/0.19.4/consul-template_0.19.4_linux_amd64.zip
     dest: /tmp/consul-template.zip
   notify:
     - unzip consul-template
-  when: (use_consul)
+  when: (use_consul and consul_template_bin.stat.exists == False)

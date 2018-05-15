@@ -4,23 +4,28 @@
   systemd:
     daemon_reload: yes
 
+- name: delete default varnish
+  file:
+    path: /lib/systemd/system/varnish.service
+    state: absent
+
+- name: delete default varnishlog
+  file:
+    path: /lib/systemd/system/varnishlog.service
+    state: absent
+
+- name: delete default varnishncsa
+  file:
+    path: /lib/systemd/system/varnishncsa.service
+    state: absent
+
 - name: disable default varnish
   systemd:
     name: varnish
     state: stopped
     enabled: false
-
-- name: disable default varnishlog
-  systemd:
-    name: varnishlog
-    state: stopped
-    enabled: false
-
-- name: disable default varnishncsa
-  systemd:
-    name: varnishncsa
-    state: stopped
-    enabled: false
+  notify:
+    -  delete varnish unit
 
 - name: restart varnish
   systemd:
@@ -30,7 +35,7 @@
   with_items:
     - "{{ varnish_application }}"
 
-- name: stop varnishlog
+- name: disable varnishlog
   systemd:
     name: varnishlog@{{ item.name }}
     state: stopped
@@ -45,12 +50,36 @@
     enabled: true
   with_items:
     - "{{ varnish_application }}"
-    
+
+- name: reload varnish
+  systemd:
+    name: varnish@{{ item.name }}
+    state: reloaded
+  with_items:
+    - "{{ varnish_application }}"
+
+- name: remove consul-template archive
+  file:
+    path: /tmp/consul-template.zip
+    state: absent
+
 - name: unzip consul-template
   unarchive:
+    remote_src: yes
     src: /tmp/consul-template.zip
-    dest: /usr/local/bin/consul-template
+    dest: /usr/local/bin/
     owner: "root"
     group: "root"
     mode: "0755"
-  
+  notify: 
+    - remove consul-template archive
+
+- name: restart consul-varnish
+  systemd:
+    name: consul-template@{{ item.name }}
+    state: restarted
+    enabled: true
+  with_items: 
+    - "{{ varnish_application }}"
+  notify:
+    - start varnish
