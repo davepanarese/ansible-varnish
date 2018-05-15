@@ -10,3 +10,5 @@
     - gnupg
     - apt-transport-https
     - software-properties-common
+    - unzip
+    - zip
