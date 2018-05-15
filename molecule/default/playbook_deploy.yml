@@ -7,3 +7,5 @@
   hosts: all
   roles:
     - {role: ansible-varnish}
+  vars:
+    use_consul: true
