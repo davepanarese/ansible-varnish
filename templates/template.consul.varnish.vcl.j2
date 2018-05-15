@@ -17,23 +17,19 @@ probe {{ item.varnish_probe_check.probe_name }}
 }
 
 # Consul definition for backends
-{% raw %}
-{{range service "swarm_worker"}}
+{% raw %}{{range service "swarm_worker"}}
 backend {{.Name}}_{{.ID}} {
     .host = "{{.Address}}";
-{{end}}
-{% endraw %}
+{{end}}{% endraw %}
     .port = "{{ item.varnish_backend.service_proxy_port }}";
     .probe = {{ item.varnish_probe_check.probe_name }};
 }
 
 sub vcl_init {
     new bar = directors.round_robin();
-{% raw %}
-{{range service "swarm_worker"}}
+{% raw %}{{range service "swarm_worker"}}
     bar.add_backend({{.Name}}_{{.ID}});
-{{end}}
-{% endraw %}
+{{end}}{% endraw %}
 }
 
 acl purge {
