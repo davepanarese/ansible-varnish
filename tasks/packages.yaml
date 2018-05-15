@@ -35,5 +35,4 @@
     dest: /tmp/consul-template.zip
   notify:
     - unzip consul-template
-    - make consul-template executable
   when: (use_consul)
