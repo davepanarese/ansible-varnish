@@ -50,7 +50,7 @@
   unarchive:
     remote_src: yes
     src: /tmp/consul-template.zip
-    dest: /usr/local/bin/consul-template
+    dest: /usr/local/bin/
     owner: "root"
     group: "root"
     mode: "0755"
