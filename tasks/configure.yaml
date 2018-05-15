@@ -32,3 +32,11 @@
     - "{{ varnish_application }}"
   notify: 
     - restart varnish
+
+- name: Get Varnish configuration
+  template:
+    src: template.consul.varnish.vcl.j2
+    dest: "/etc/varnish/{{ item.name }}.consul.vcl"
+  with_items: 
+    - "{{ varnish_application }}"
+  when: (use_consul)
