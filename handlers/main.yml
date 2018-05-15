@@ -38,4 +38,7 @@
   unarchive:
     src: /tmp/consul-template.zip
     dest: /usr/local/bin/consul-template
+    owner: "root"
+    group: "root"
+    mode: "0755"
   

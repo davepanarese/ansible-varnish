@@ -3,4 +3,6 @@
 - name: run the main role
   hosts: all
   roles:
-    - {role: ansible-varnish}
+    - ansible-varnish
+  vars:
+    use_consul: true
