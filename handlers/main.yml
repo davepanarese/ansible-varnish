@@ -28,18 +28,10 @@
     -  delete varnish unit
 
 - name: disable default varnishlog
-  systemd:
-    name: varnishlog
-    state: stopped
-    enabled: false
   notify:
     -  delete varnishlog unit
 
 - name: disable default varnishncsa
-  systemd:
-    name: varnishncsa
-    state: stopped
-    enabled: false
   notify:
     -  delete varnishncsa unit
 
