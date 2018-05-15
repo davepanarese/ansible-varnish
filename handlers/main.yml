@@ -4,9 +4,21 @@
   systemd:
     daemon_reload: yes
 
-- name: disable varnish
+- name: disable default varnish
   systemd:
     name: varnish
+    state: stopped
+    enabled: false
+
+- name: disable default varnishlog
+  systemd:
+    name: varnishlog
+    state: stopped
+    enabled: false
+
+- name: disable default varnishncsa
+  systemd:
+    name: varnishncsa
     state: stopped
     enabled: false
 

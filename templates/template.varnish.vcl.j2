@@ -16,6 +16,28 @@ probe {{ item.varnish_probe_check.probe_name }}
     .threshold = {{ item.varnish_probe_check.probe_threshold }};
 }
 
+# Default backend definition. Set this to point to your content server.
+{% for backend in groups[item.varnish_backend.ansible_group] %}
+backend {{ item.name }}_{{ loop.index}} {
+    .host = "{{ backend }}";
+    .port = "{{ item.varnish_backend.service_proxy_port }}";
+    .probe = {{ item.varnish_probe_check.probe_name }};
+}
+{% endfor %}
+
+sub vcl_init {
+    new {{ item.name }} = directors.round_robin();
+{% for backend in groups[item.varnish_backend.ansible_group] %}
+	{{ item.name }}.add_backend({{ item.name }}_{{ loop.index}});
+{% endfor %}
+}
+
+acl purge {
+{% for acl in item.varnish_hosts_allow_purge %}
+    "{{ acl }}";
+{% endfor %}
+}
+
 # Device identification
 sub identify_device {
 
@@ -39,32 +61,6 @@ sub identify_device {
             set req.http.X-UA-Detect = "mobile";
         }
     }
-}
-
-# Default backend definition. Set this to point to your content server.
-{% set count = 1 %}
-{% for backend in groups[item.varnish_backend.ansible_group] %}
-backend {{ item.name }}_{{ count }} {
-    .host = "{{ backend }}";
-    .port = "{{ item.varnish_backend.service_proxy_port }}";
-    .probe = {{ item.varnish_probe_check.probe_name }};
-}
-{% set count = count + 1 %}
-{% endfor %}
-
-sub vcl_init {
-    new {{ item.name }} = directors.round_robin();
-{% set count = 1 %}
-{% for backend in groups[item.varnish_backend.ansible_group] %}
-	{{ item.name }}.add_backend({{ item.name }}_{{ count }});
-{% set count = count + 1 %}
-{% endfor %}
-}
-
-acl purge {
-{% for acl in item.varnish_hosts_allow_purge %}
-    "{{ acl }}";
-{% endfor %}
 }
 
 sub vcl_recv {

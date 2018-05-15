@@ -6,7 +6,9 @@
     state: latest
     update_cache: yes
   notify:
-    - start varnish
+    - disable default varnish
+    - disable default varnishlog
+    - disable default varnishncsa
 
 - name: Delete default varnish systemd unit
   file:
