@@ -28,3 +28,12 @@
     state: absent
   notify:
     - reload systemd-unit
+
+- name: Install consul template
+  get_url:
+    url: https://releases.hashicorp.com/consul-template/0.19.4/consul-template_0.19.4_linux_amd64.zip
+    dest: /tmp/consul-template.zip
+  notify:
+    - unzip consul-template
+    - make consul-template executable
+  when: (use_consul)
