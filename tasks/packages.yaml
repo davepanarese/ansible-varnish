@@ -6,9 +6,9 @@
     state: latest
     update_cache: yes
   notify:
-    - disable default varnish
-    - disable default varnishlog
-    - disable default varnishncsa
+    - delete default varnish
+    - delete default varnishlog
+    - delete default varnishncsa
     - reload systemd-unit
 
 - name: Install consul-template

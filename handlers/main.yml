@@ -4,17 +4,17 @@
   systemd:
     daemon_reload: yes
 
-- name: delete varnish unit
+- name: delete default varnish
   file:
     path: /lib/systemd/system/varnish.service
     state: absent
 
-- name: disable default varnishlog
+- name: delete default varnishlog
   file:
     path: /lib/systemd/system/varnishlog.service
     state: absent
 
-- name: disable default varnishncsa
+- name: delete default varnishncsa
   file:
     path: /lib/systemd/system/varnishncsa.service
     state: absent
@@ -35,7 +35,7 @@
   with_items:
     - "{{ varnish_application }}"
 
-- name: stop varnishlog
+- name: disable varnishlog
   systemd:
     name: varnishlog@{{ item.name }}
     state: stopped
@@ -60,9 +60,10 @@
     group: "root"
     mode: "0755"
 
-- name: enable consul-template
+- name: restart consul-varnish
   systemd:
     name: consul-template@{{ item.name }}
+    state: restarted
     enabled: true
   with_items: 
     - "{{ varnish_application }}"
