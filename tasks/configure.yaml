@@ -9,6 +9,13 @@
   notify:
     - restart varnish
 
+- name: Create Varnish environment file
+  template:
+    src: varnish.reload_vcl.j2
+    dest: "/usr/share/varnish/reload-vcl-{{ item.name }}"
+  with_items: 
+    - "{{ varnish_application }}"
+
 - name: Create Varnishd Systemd unit
   template:
     src: varnish.service.j2
@@ -31,7 +38,7 @@
   with_items: 
     - "{{ varnish_application }}"
   notify: 
-    - restart varnish
+    - reload varnish
 
 - name: Get Varnish configuration
   template:
@@ -39,4 +46,6 @@
     dest: "/etc/varnish/{{ item.name }}.consul.vcl"
   with_items: 
     - "{{ varnish_application }}"
+  #notify: 
+  #  - reload consul-varnish
   when: (use_consul)

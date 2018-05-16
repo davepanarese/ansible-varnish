@@ -19,7 +19,7 @@ Restart=always
 RestartSec=5
 ExecStartPre=/usr/sbin/varnishd -C -f /etc/varnish/%I.vcl
 ExecStart=/usr/sbin/varnishd -n %I $DAEMON_OPTS
-ExecReload=/usr/share/varnish/reload-vcl
+ExecReload=sh /usr/share/varnish/reload-vcl-%I
 
 [Install]
 WantedBy=multi-user.target
