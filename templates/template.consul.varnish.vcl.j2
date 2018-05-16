@@ -102,7 +102,6 @@ sub vcl_recv {
 
     # Reset coockie for other objects
     unset req.http.Cookie;
-    
 }
 
 sub vcl_hash {
@@ -146,6 +145,7 @@ sub vcl_backend_response {
 {% endif %}
 {% endfor %}
 
+{% if item.varnish_url_cache is defined %}
 {% for object in item.varnish_url_cache %}
 {% if object.url is defined %}
     if (bereq.http.host ~ "^{{ object.url }}" && bereq.url ~ "^{{ object.path }}") {
@@ -183,6 +183,7 @@ sub vcl_backend_response {
     }
 {% endif %}
 {% endfor %}
+{% endif %}
 }
 
 sub vcl_deliver {
