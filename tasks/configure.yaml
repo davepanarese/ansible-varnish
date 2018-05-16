@@ -57,6 +57,6 @@
     dest: "/etc/varnish/{{ item.name }}.consul.vcl"
   with_items: 
     - "{{ varnish_application }}"
-  notify: 
-    - restart consul-varnish
+  #notify: 
+  #  - restart consul-varnish
   when: (use_consul)
