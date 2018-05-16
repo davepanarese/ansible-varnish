@@ -54,7 +54,7 @@
 - name: Get varnish configuration
   template:
     src: template.consul.varnish.vcl.j2
-    dest: "/etc/varnish/{{ item.name }}.consul.vcl"
+    dest: "/etc/varnish/{{ item.name }}.consul.tmpl"
   with_items: 
     - "{{ varnish_application }}"
   #notify: 
