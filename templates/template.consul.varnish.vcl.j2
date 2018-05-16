@@ -27,7 +27,7 @@ backend {{.Name}}_{{.ID}} {
 {% endraw %}
 
 sub vcl_init {
-    new bar = directors.round_robin();
+    new {{ item.name }} = directors.round_robin();
 {% raw %}{{range service "swarm_worker"}}
     bar.add_backend({{.Name}}_{{.ID}});{{end}}
 {% endraw %}
