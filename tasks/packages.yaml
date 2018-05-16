@@ -11,10 +11,16 @@
     - delete default varnishncsa
     - reload systemd-unit
 
+- name: Verify consul-template
+  stat:
+    path: /usr/local/bin/consul-template
+  register: consul-template-bin
+  when: (use_consul)
+
 - name: Install consul-template
   get_url:
     url: https://releases.hashicorp.com/consul-template/0.19.4/consul-template_0.19.4_linux_amd64.zip
     dest: /tmp/consul-template.zip
   notify:
     - unzip consul-template
-  when: (use_consul)
+  when: (use_consul and consul-template-bin.stat.exists == False)

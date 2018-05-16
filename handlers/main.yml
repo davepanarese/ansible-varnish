@@ -50,7 +50,12 @@
     enabled: true
   with_items:
     - "{{ varnish_application }}"
-    
+
+- name: remove consul-template archive
+  file:
+    path: /tmp/consul-template.zip
+    state: absent
+
 - name: unzip consul-template
   unarchive:
     remote_src: yes
@@ -59,6 +64,8 @@
     owner: "root"
     group: "root"
     mode: "0755"
+  notify: 
+    - remove consul-template archive
 
 - name: restart consul-varnish
   systemd:
