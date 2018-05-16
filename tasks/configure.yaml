@@ -11,7 +11,7 @@
 
 - name: Create Varnish environment file
   template:
-    src: varnish.reload_vcl.j2
+    src: varnish.reload-vcl.j2
     dest: "/usr/share/varnish/reload-vcl-{{ item.name }}"
   with_items: 
     - "{{ varnish_application }}"
