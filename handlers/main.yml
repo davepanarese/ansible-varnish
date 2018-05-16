@@ -51,6 +51,13 @@
   with_items:
     - "{{ varnish_application }}"
 
+- name: reload varnish
+  systemd:
+    name: varnish@{{ item.name }}
+    state: reloaded
+  with_items:
+    - "{{ varnish_application }}"
+
 - name: remove consul-template archive
   file:
     path: /tmp/consul-template.zip
