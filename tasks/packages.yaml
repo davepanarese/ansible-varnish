@@ -14,7 +14,7 @@
 - name: Verify consul-template
   stat:
     path: /usr/local/bin/consul-template
-  register: consul-template-bin
+  register: consul_template_bin
   when: (use_consul)
 
 - name: Install consul-template
@@ -23,4 +23,4 @@
     dest: /tmp/consul-template.zip
   notify:
     - unzip consul-template
-  when: (use_consul and consul-template-bin.stat.exists == False)
+  when: (use_consul and consul_template_bin.stat.exists == False)
