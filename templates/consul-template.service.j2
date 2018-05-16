@@ -2,7 +2,7 @@
 Description=consul-template for %I
 
 [Service]
-ExecStart=/usr/local/bin/consul-template -consul-addr {{ consul_server_address }} -template "/etc/varnish/%I.consul.tmpl:/etc/varnish/%I.vcl:systemctl reload varnish@%I" >> /var/log/consul-template.{{ item.name }}.log 2>&1"
+ExecStart=/usr/local/bin/consul-template -consul-addr {{ consul_server_address }} -template "/etc/varnish/%I.consul.tmpl:/etc/varnish/%I.vcl:systemctl reload varnish@%I"
 Restart=always
 RestartSec=30
 KillSignal=SIGINT
