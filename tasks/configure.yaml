@@ -47,8 +47,6 @@
   notify:
     - enable consul-template
     - reload systemd-unit
-  with_items: 
-    - "{{ varnish_application }}"
   when: (use_consul)
 
 - name: Get varnish configuration

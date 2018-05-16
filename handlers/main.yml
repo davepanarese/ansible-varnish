@@ -64,3 +64,5 @@
   systemd:
     name: consul-template@{{ item.name }}
     enabled: true
+  with_items: 
+    - "{{ varnish_application }}"
