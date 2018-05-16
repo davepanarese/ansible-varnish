@@ -100,11 +100,9 @@ sub vcl_recv {
 {% endif %}
 {% endfor %}
 
-    # Unset Cookie if is static object
-    if (req.url ~ "\.(7z|avi|bmp|bz2|css|csv|doc|docx|eot|flac|flv|gif|gz|ico|jpeg|jpg|js|less|mka|mkv|mov|mp3|mp4|mpeg|mpg|odt|otf|ogg|ogm|opus|pdf|png|ppt|pptx|rar|rtf|svg|svgz|swf|tar|tbz|tgz|ttf|txt|txz|wav|webm|webp|woff|woff2|xls|xlsx|xml|xz|zip)(\?.*|)$" ||
-        req.url ~ "\.(json|html)(\?.*|)$") {
-            unset req.http.Cookie;
-    }
+    # Reset coockie for other objects
+    unset req.http.Cookie;
+    
 }
 
 sub vcl_hash {
