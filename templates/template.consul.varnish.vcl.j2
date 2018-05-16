@@ -27,9 +27,9 @@ backend {{.Name}}_{{.ID}} {
 {% endraw %}
 
 sub vcl_init {
-    new {{ item.name }} = directors.round_robin();
+    new backend_pool = directors.round_robin();
 {% raw %}{{range service "swarm_worker"}}
-    bar.add_backend({{.Name}}_{{.ID}});{{end}}
+    backend_pool.add_backend({{.Name}}_{{.ID}});{{end}}
 {% endraw %}
 }
 
@@ -66,7 +66,7 @@ sub identify_device {
 
 sub vcl_recv {
     # Get backend nodes
-    set req.backend_hint = {{ item.name }}.backend();
+    set req.backend_hint = backend_pool.backend();
 
     # Call device detection
     call identify_device;
