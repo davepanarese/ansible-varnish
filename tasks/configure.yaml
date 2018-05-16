@@ -1,6 +1,6 @@
 ---
 
-- name: Create Varnish environment file
+- name: Create varnish environment file
   template:
     src: default.varnish.j2
     dest: "/etc/default/varnish-{{ item.name }}"
@@ -9,21 +9,21 @@
   notify:
     - restart varnish
 
-- name: Create Varnish environment file
+- name: Create varnish environment file
   template:
     src: varnish.reload-vcl.j2
     dest: "/usr/share/varnish/reload-vcl-{{ item.name }}"
   with_items: 
     - "{{ varnish_application }}"
 
-- name: Create Varnishd Systemd unit
+- name: Create varnishd systemd unit
   template:
     src: varnish.service.j2
     dest: /etc/systemd/system/varnish@.service
   notify:
     - reload systemd-unit
 
-- name: Create Varnishlog Systemd unit
+- name: Create varnishlog systemd unit
   template:
     src: varnishlog.service.j2
     dest: /etc/systemd/system/varnishlog@.service
@@ -31,7 +31,7 @@
     - reload systemd-unit
     - stop varnishlog
 
-- name: Get Varnish configuration
+- name: Get varnish configuration
   template:
     src: template.varnish.vcl.j2
     dest: "/etc/varnish/{{ item.name }}.vcl"
@@ -40,12 +40,23 @@
   notify: 
     - reload varnish
 
-- name: Get Varnish configuration
+- name: Create consul-template systemd unit
+  template:
+    src: consul-template.service.j2
+    dest: /etc/systemd/system/consul-template@.service
+  notify:
+    - enable consul-template
+    - reload systemd-unit
+  with_items: 
+    - "{{ varnish_application }}"
+  when: (use_consul)
+
+- name: Get varnish configuration
   template:
     src: template.consul.varnish.vcl.j2
     dest: "/etc/varnish/{{ item.name }}.consul.vcl"
   with_items: 
     - "{{ varnish_application }}"
-  #notify: 
-  #  - reload consul-varnish
+  notify: 
+    - restart consul-varnish
   when: (use_consul)

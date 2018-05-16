@@ -1,6 +1,6 @@
 ---
 
-- name: Install Varnish 5.x package
+- name: Install varnish 5.x package
   apt:
     name: varnish
     state: latest
@@ -11,7 +11,7 @@
     - disable default varnishncsa
     - reload systemd-unit
 
-- name: Install consul template
+- name: Install consul-template
   get_url:
     url: https://releases.hashicorp.com/consul-template/0.19.4/consul-template_0.19.4_linux_amd64.zip
     dest: /tmp/consul-template.zip

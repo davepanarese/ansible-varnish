@@ -59,3 +59,8 @@
     owner: "root"
     group: "root"
     mode: "0755"
+
+- name: enable consul-template
+  systemd:
+    name: consul-template@{{ item.name }}
+    enabled: true
