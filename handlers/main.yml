@@ -82,4 +82,4 @@
   with_items: 
     - "{{ varnish_application }}"
   notify:
-    - start varnish
+    - restart varnish
