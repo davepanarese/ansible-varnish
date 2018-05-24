@@ -132,8 +132,7 @@ sub vcl_backend_response {
     }
 
 {% if item.varnish_cookie_not_cache is defined %}
-    if (obj.http.Set-Cookie) {
-        set beresp.http.X-Cache-Rule = "No cache - cookie is present";
+    if (bereq.http.Set-Cookie) {
         set beresp.uncacheable = true;
         return (deliver);
     }
