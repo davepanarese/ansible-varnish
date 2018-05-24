@@ -132,10 +132,12 @@ sub vcl_backend_response {
     }
 
 {% if item.varnish_cookie_not_cache is defined %}
-    if (bereq.http.Set-Cookie) {
+{% for object in item.varnish_cookie_not_cache %}
+    if (bereq.http.cookie ~ "{{ object.cookie }}") {
         set beresp.uncacheable = true;
         return (deliver);
     }
+{% endfor %}
 {% endif %}
 
 {% for object in item.varnish_url_not_cache %}
