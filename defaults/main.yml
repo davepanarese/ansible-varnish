@@ -39,3 +39,6 @@ varnish_application:
         url: "admin.example.com"
         path: "/admin"
         http_header: "no cache - admin"
+    varnish_cookie_not_cache:
+      - cookie: "cookie1"
+      - cookie: "cookie2"
