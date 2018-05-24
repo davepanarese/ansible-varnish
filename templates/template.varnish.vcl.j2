@@ -86,6 +86,15 @@ sub vcl_recv {
         return (pass);
     }
 
+    # Don't cache if specified cookie
+{% if item.varnish_cookie_not_cache is defined %}
+{% for object in item.varnish_cookie_not_cache %}
+    if (req.http.cookie ~ "{{ object.cookie }}") {
+        return(pass);
+    }
+{% endfor %}
+{% endif %}
+
     # Don't cache path specified behind
 {% for object in item.varnish_url_not_cache %}
 {% if object.url is defined %}
@@ -121,6 +130,14 @@ sub vcl_backend_response {
         set beresp.ttl = 2s;
         return (deliver);
     }
+
+{% if item.varnish_cookie_not_cache is defined %}
+    if (obj.http.Set-Cookie) {
+        set beresp.http.X-Cache-Rule = "No cache - cookie is present";
+        set beresp.uncacheable = true;
+        return (deliver);
+    }
+{% endif %}
 
 {% for object in item.varnish_url_not_cache %}
 {% if object.url is defined %}
